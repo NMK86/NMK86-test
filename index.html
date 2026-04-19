@@ -76,8 +76,16 @@
       text-decoration: none;
       font-size: 15px;
       margin-right: 12px;
+      border: none;
+      cursor: pointer;
+      font-family: Arial, sans-serif;
     }
     .hero-cta:hover { opacity: 0.9; }
+    .hero-helper {
+      margin-top: 10px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.82);
+    }
     .hero-secondary {
       display: inline-block;
       color: rgba(255,255,255,0.85);
@@ -85,6 +93,62 @@
       text-decoration: underline;
       cursor: pointer;
     }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+    }
+    .modal-overlay.open { display: flex; }
+    .signup-modal {
+      width: 100%;
+      max-width: 500px;
+      background: white;
+      border-radius: 12px;
+      border: 1px solid #d9e8f8;
+      box-shadow: 0 16px 44px rgba(0,0,0,0.24);
+      padding: 24px;
+      position: relative;
+    }
+    .modal-close {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      border: none;
+      background: none;
+      color: #4a90d9;
+      font-size: 24px;
+      line-height: 1;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .signup-modal h2 {
+      margin: 0 24px 8px 0;
+      color: #1a5f9e;
+      font-size: 24px;
+    }
+    .signup-modal p {
+      margin: 0 0 16px;
+      color: #555;
+      font-size: 15px;
+    }
+    .modal-success {
+      display: none;
+      padding: 14px;
+      border-radius: 8px;
+      background: #eaf4ff;
+      border: 1px solid #b8d9f5;
+      color: #1a5f9e;
+      font-weight: bold;
+      margin-top: 12px;
+    }
+    .modal-success.visible { display: block; }
 
     /* NAV */
     nav {
@@ -159,8 +223,19 @@
     <div class="hero-stat">✓ Real workflow examples</div>
     <div class="hero-stat">✓ No hype</div>
   </div>
-  <a href="/free-prompts.html" class="hero-cta">Get 5 Free AI Prompts →</a>
+  <button type="button" class="hero-cta" id="open-signup-modal">Get the prompts (free)</button>
   <a href="/best-ai-tools-data-analysts.html" class="hero-secondary">Read the honest review</a>
+  <p class="hero-helper">Takes 10 seconds. No spam.</p>
+</div>
+
+<div class="modal-overlay" id="signup-modal" aria-hidden="true">
+  <div class="signup-modal" role="dialog" aria-modal="true" aria-labelledby="signup-title">
+    <button type="button" class="modal-close" id="close-signup-modal" aria-label="Close">×</button>
+    <h2 id="signup-title">Get 5 Free AI Prompts</h2>
+    <p>Name, email, and we’ll send them instantly.</p>
+    <getresponse-form form-id="9533d7d1-64b1-45eb-a78b-b22b6ac08648" e="1"></getresponse-form>
+    <div class="modal-success" id="modal-success">You're in! Check your email — your 5 prompts are waiting.</div>
+  </div>
 </div>
 
 <!-- EMAIL SIGNUP -->
@@ -244,6 +319,48 @@
 <footer>
   Practical AI guides for data professionals. Updated regularly.
 </footer>
+
+<script>
+  (function() {
+    var openButton = document.getElementById('open-signup-modal');
+    var closeButton = document.getElementById('close-signup-modal');
+    var modal = document.getElementById('signup-modal');
+    var successMessage = document.getElementById('modal-success');
+
+    function openModal() {
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    openButton.addEventListener('click', openModal);
+    closeButton.addEventListener('click', closeModal);
+
+    modal.addEventListener('click', function(event) {
+      if (event.target === modal) {
+        closeModal();
+      }
+    });
+
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape' && modal.classList.contains('open')) {
+        closeModal();
+      }
+    });
+
+    modal.addEventListener('submit', function() {
+      setTimeout(function() {
+        successMessage.classList.add('visible');
+      }, 600);
+    }, true);
+  })();
+</script>
 
 </body>
 </html>
